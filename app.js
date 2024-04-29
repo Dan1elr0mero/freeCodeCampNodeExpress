@@ -13,11 +13,20 @@ const http = require("http");
 const server = http.createServer((req, res) => {
   console.log(req.method);
   const { method } = req;
+  console.log(method);
   switch (method) {
     case "GET":
       manageGETResquest(req, res);
 
       break;
+    case "POST":
+      managePOSTResquest(req, res);
+
+    case "PUT":
+      managePUTResquest(req, res);
+
+    case "DELETE":
+      manageDELETEResquest(req, res);
 
     default:
       console.log("metodo usado no es co patible" + method);
@@ -45,9 +54,47 @@ function manageGETResquest(req, res) {
 
   if (path === "/") {
     res.statusCode = 200;
-    res.end("biendenido a mi server");
+    return res.end("biendenido a mi server");
   } else if (path === "/cursos") {
     res.statusCode = 200;
-    res.end("aqui puedo poner objetos");
+    return res.end("aqui puedo poner objetos");
   }
 }
+
+function managePOSTResquest(req, res) {
+  const path = req.url;
+  if (path === "/") {
+    let body = "";
+    req.on("data", (contenido) => {
+      body += contenido.toString();
+    });
+    req.on("end", () => {
+      console.log(body);
+      console.log(typeof body);
+
+      //convertir a un objeto de javascript
+      body = JSON.parse(body);
+      res.end("el servidor resibio una solicitud POST en /");
+    });
+
+    res.statusCode = 200;
+    // return res.end("biendenido a mi server");
+  }
+}
+function managePUTResquest(req, res) {
+  const path = req.url;
+  if (path === "/") {
+    res.statusCode = 200;
+    return res.end("biendenido a mi server");
+  }
+}
+
+function manageDELETEResquest(req, res) {
+  const path = req.url;
+  if (path === "/") {
+    res.statusCode = 200;
+    return res.end("biendenido a mi server");
+  }
+}
+
+//nodemon = Herramienta que reinicia la aplicacion de node.js cuendo detects algun cambio .
